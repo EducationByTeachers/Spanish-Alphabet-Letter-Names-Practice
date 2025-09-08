@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spanish Alphabet Letter Names Formative Practice Assessment</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f8f9fa; margin: 0; padding: 0; }
+    .container { max-width: 900px; margin: auto; padding: 20px; }
+    .hidden { display: none; }
+    h1, h2 { text-align: center; color: #1E3A8A; }
+    .question { margin: 20px 0; padding: 15px; background: #fff; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .answers { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+    button.option {
+      background-color: #87CEFA; color: black; border: none; padding: 10px 18px;
+      border-radius: 8px; cursor: pointer; flex: 1; min-width: 100px;
+    }
+    button.option.correct { background-color: #28a745 !important; color: white; }
+    button.option.incorrect { background-color: #dc3545 !important; color: white; }
+    button.option:disabled { cursor: not-allowed; }
+    .start-btn, .restart-btn {
+      display: block; margin: 30px auto; padding: 15px 35px;
+      font-size: 18px; border: none; border-radius: 10px; cursor: pointer;
+    }
+    .start-btn { background: #28a745; color: white; font-size: 22px; }
+    .restart-btn { background: #007bff; color: white; }
+    .result { text-align: center; font-size: 20px; margin-top: 30px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div id="intro" class="container">
+  <h1>Spanish Alphabet Letter Names Formative Practice Assessment</h1>
+  <p><strong>Instructions:</strong> Enter your name and grade to begin. 
+  Answer all 20 questions. Buttons will turn <span style="color:green;">green</span> if correct, 
+  <span style="color:red;">red</span> if incorrect. At the end, your score will appear.</p>
+  <label><strong>Your Name:</strong></label><br>
+  <input type="text" id="studentName" placeholder="Enter your name"><br><br>
+  <label><strong>Your Grade:</strong></label><br>
+  <input type="text" id="studentGrade" placeholder="Enter your grade"><br><br>
+  <button class="start-btn" onclick="startExam()">Start</button>
+</div>
+
+<div id="exam" class="container hidden">
+  <h2 id="welcome"></h2>
+  <div id="questions"></div>
+  <button class="restart-btn" onclick="restartExam()">Restart</button>
+  <div id="results" class="result"></div>
+</div>
+
+<script>
+const questions = [
+  { q: "1. Which letter name in Spanish is 'ah'?", options: ["F","A","H","E"], answer: "A" },
+  { q: "2. What is the Spanish name for the letter 'B'?", options: ["beh","deh","peh","veh"], answer: "beh" },
+  { q: "3. The Spanish letter name 'ceh' represents which letter?", options: ["S","Z","C","K"], answer: "C" },
+  { q: "4. Which letter corresponds to 'deh' in Spanish?", options: ["B","P","V","D"], answer: "D" },
+  { q: "5. In Spanish, which letter is called 'eh'?", options: ["I","A","O","E"], answer: "E" },
+  { q: "6. The Spanish letter name 'efeh' represents which letter?", options: ["S","F","T","P"], answer: "F" },
+  { q: "7. Which letter is called 'heh' in Spanish?", options: ["G","J","H","X"], answer: "H" },
+  { q: "8. What letter corresponds to 'ee' in Spanish?", options: ["E","I","Y","U"], answer: "I" },
+  { q: "9. The Spanish name 'hotah' represents which letter?", options: ["G","J","H","X"], answer: "J" },
+  { q: "10. Which letter is called 'kah' in Spanish?", options: ["C","Q","K","G"], answer: "K" },
+  { q: "11. What is the Spanish name for the letter 'L'?", options: ["eleh","emeh","eneh","ereh"], answer: "eleh" },
+  { q: "12. The Spanish letter name 'emeh' represents which letter?", options: ["N","M","W","V"], answer: "M" },
+  { q: "13. Which letter corresponds to 'eneh' in Spanish?", options: ["M","N","Ñ","W"], answer: "N" },
+  { q: "14. In Spanish, which letter is called 'oh'?", options: ["U","A","O","E"], answer: "O" },
+  { q: "15. The Spanish letter name 'peh' represents which letter?", options: ["B","D","V","P"], answer: "P" },
+  { q: "16. Which letter is called 'koo' in Spanish?", options: ["C","K","Q","G"], answer: "Q" },
+  { q: "17. What letter corresponds to 'ereh' in Spanish?", options: ["L","R","K","P"], answer: "R" },
+  { q: "18. The Spanish name 'teh' represents which letter?", options: ["D","T","P","B"], answer: "T" },
+  { q: "19. Which letter is called 'oo' in Spanish?", options: ["O","U","W","Y"], answer: "U" },
+  { q: "20. What is the Spanish name for the letter 'Z'?", options: ["zeh","seh","ceh","ekis"], answer: "zeh" }
+];
+
+let student = "";
+let correct = 0;
+let incorrect = 0;
+
+function startExam() {
+  student = document.getElementById("studentName").value.trim();
+  const grade = document.getElementById("studentGrade").value.trim();
+  if (!student || !grade) {
+    alert("Please enter your name and grade.");
+    return;
+  }
+  document.getElementById("intro").classList.add("hidden");
+  document.getElementById("exam").classList.remove("hidden");
+  document.getElementById("welcome").innerText = "Welcome, " + student + "! Answer all 20 questions below:";
+  loadQuestions();
+}
+
+function loadQuestions() {
+  correct = 0;
+  incorrect = 0;
+  const container = document.getElementById("questions");
+  container.innerHTML = "";
+  questions.forEach((item, index) => {
+    const qDiv = document.createElement("div");
+    qDiv.className = "question";
+    qDiv.innerHTML = "<p>" + item.q + "</p>";
+    const answersDiv = document.createElement("div");
+    answersDiv.className = "answers";
+    let shuffled = [...item.options].sort(() => Math.random() - 0.5);
+    shuffled.forEach(opt => {
+      const btn = document.createElement("button");
+      btn.className = "option";
+      btn.innerText = opt;
+      btn.onclick = () => handleAnswer(btn, opt, item.answer);
+      answersDiv.appendChild(btn);
+    });
+    qDiv.appendChild(answersDiv);
+    container.appendChild(qDiv);
+  });
+}
+
+function handleAnswer(button, selected, correctAns) {
+  const buttons = button.parentNode.querySelectorAll("button");
+  buttons.forEach(b => b.disabled = true);
+  if (selected === correctAns) {
+    button.classList.add("correct");
+    correct++;
+  } else {
+    button.classList.add("incorrect");
+    incorrect++;
+    buttons.forEach(b => { if (b.innerText === correctAns) b.classList.add("correct"); });
+  }
+  if (correct + incorrect === questions.length) {
+    document.getElementById("results").innerText = 
+      student + ", you got " + correct + " correct and " + incorrect + " incorrect.";
+  }
+}
+
+function restartExam() {
+  document.getElementById("results").innerText = "";
+  loadQuestions();
+}
+</script>
+
+</body>
+</html>
